@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# chromedriver
+*chromedriver.exe
+
+# config file 
+config.ini
+
 # Distribution / packaging
 .Python
 build/
