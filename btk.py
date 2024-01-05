@@ -634,6 +634,7 @@ class ArchiveDownloader:
             out_file_name = filepath + '-'.join([feed_id, file_date]) + '.mp3'
 
             # Get the URL of the mp3 file
+            print(f'\tGetting download page for {archive_uri}...')
             mp3_soup = self.get_download_soup(archive_uri)
             file_url = self._parse_mp3_path(mp3_soup)
 
@@ -658,12 +659,11 @@ class ArchiveDownloader:
             r = _requests.get(url, stream=True)
             file_size = int(r.headers['Content-Length'])
 
-            main_progress_bar.write(f'\tDownloading {file_name} ({file_size} bytes)')
 
             t = _tqdm(total=file_size,
                       desc=f'Downloading {file_name}', dynamic_ncols=True)
             
-            if file_size <= 300:
+            if file_size <= 2000:
                 t.write(f'\tReceived 209-byte file. Skipping.')
                 return
 
