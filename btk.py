@@ -634,7 +634,7 @@ class ArchiveDownloader:
             out_file_name = filepath + '-'.join([feed_id, file_date]) + '.mp3'
 
             # Get the URL of the mp3 file
-            print(f'\tGetting download page for {archive_uri}...')
+            # print(f'\tGetting download page for {archive_uri}...')
             mp3_soup = self.get_download_soup(archive_uri)
             file_url = self._parse_mp3_path(mp3_soup)
 
@@ -660,11 +660,11 @@ class ArchiveDownloader:
             file_size = int(r.headers['Content-Length'])
 
 
-            t = _tqdm(total=file_size,
-                      desc=f'Downloading {file_name}', dynamic_ncols=True)
+            # t = _tqdm(total=file_size,
+            #           desc=f'Downloading {file_name}', dynamic_ncols=True)
             
-            if file_size <= 2000:
-                t.write(f'\tReceived 209-byte file. Skipping.')
+            if file_size <= 20480: # ignore files smaller than 20KB
+                #t.write(f'\tReceived 209-byte file. Skipping.')
                 return
 
             if r.status_code == 200:
@@ -672,15 +672,18 @@ class ArchiveDownloader:
                 with open(path, 'wb') as f:
                     for chunk in r:
                         f.write(chunk)
-                        t.update(len(chunk))
+                        # t.update(len(chunk))
             elif r.status_code == 403:
-                t.write(f'\tReceived 403 on {file_name}. Archive file does not '
-                        f' exist. Skipping.')
+                pass
+                #t.write(f'\tReceived 403 on {file_name}. Archive file does not '
+                #        f' exist. Skipping.')
             else:
-                t.write(f'\tCould not retrieve {url} (code {r.status_code}'
-                      f'). Skipping.')
+                pass
+                # t.write(f'\tCould not retrieve {url} (code {r.status_code}'
+                #       f'). Skipping.')
         else:
-            main_progress_bar.write(f'\t{file_name} already exists. Skipping.')
+            pass
+            #main_progress_bar.write(f'\t{file_name} already exists. Skipping.')
 
     def _format_entry_date(self, date):
         # Format the ArchiveEntry end time as YYYYMMDD-HHMM
